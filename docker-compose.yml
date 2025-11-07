@@ -1,0 +1,46 @@
+version: '3.8'  # wersja składni Docker Compose
+
+services:
+  mysql:  # nazwa usługi (kontenera)
+    image: mysql:latest  # obraz MySQL z Docker Hub
+    container_name: mysql-db  # nazwa kontenera
+    restart: always  # automatycznie uruchamiaj kontener po restarcie Dockera
+    environment:
+      MYSQL_ROOT_PASSWORD: haslo123  # ustawienie hasła dla użytkownika root
+    # volumes:
+    #   - /home/adam/mysql:/var/lib/mysql  # mapowanie katalogu hosta do katalogu MySQL w kontenerze
+    networks:
+      - moja_siec  # przypisanie do sieci o nazwie 'moja_siec'
+
+  phpmyadmin:  # nazwa drugiej usługi
+    image: phpmyadmin/phpmyadmin  # oficjalny obraz phpMyAdmin
+    container_name: phpmyadmin  # nazwa kontenera
+    restart: always
+    environment:
+      PMA_HOST: mysql  # nazwa usługi (mysql), z którą phpMyAdmin się łączy
+      PMA_PORT: 3306   # port MySQL w kontenerze
+    ports:
+      - "8180:80"  # mapowanie portu 80 w kontenerze na port 8080 hosta
+    networks:
+      - moja_siec  # ta sama sieć co MySQL (umożliwia komunikację)
+
+  python-app:
+    image: python:3.11-slim
+    container_name: python-app
+    working_dir: /app
+    command: bash -c "pip install fastapi uvicorn mysql-connector-python && uvicorn main:app --reload --log-level debug --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./python-app:/app          # <= mapowanie katalogu hosta do /app w kontenerze
+    ports:
+      - "9000:8000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: haslo123
+      DB_NAME: pythonapp
+    networks:
+      - moja_siec
+
+networks:
+  moja_siec:  # definicja sieci
+    driver: bridge  # typ sieci (bridge = lokalna sieć Dockera)

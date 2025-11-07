@@ -1,0 +1,68 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+servers:
+  - url: http://localhost:9000
+paths:
+  /get-users:
+    get:
+      summary: Pobiera listę użytkowników
+      responses:
+        '200':
+          description: Lista użytkowników w formacie json
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      format: email
+                    name:
+                      type: string
+                  required:
+                    - email
+                    - name
+  /add-user:
+    post:
+      summary: Add a new user
+      description: Inserts a new user into the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Jan Kowalski"
+                email:
+                  type: string
+                  format: email
+                  example: "jan@example.com"
+              required:
+                - name
+                - email
+      responses:
+        "200":
+          description: Użytkownik został pomyślnie dodany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  added_id:
+                    description: Id dodanego użytkownika
+                    type: integer
+                    example: 12
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error                    
