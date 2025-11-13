@@ -3,24 +3,56 @@ class db:
     def __init__(self):
         self.connection = get_connection()
 
-    def get_users(self):
+    def get_participants(self):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM participants")
-        users = cursor.fetchall()
+        participants = cursor.fetchall()
         cursor.close()
         conn.close()
-        return users
+        return participants
     
-    def save_user(self, user_data):
+    def get_events(self):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("INSERT INTO participants (name, email) VALUES (%s, %s)", (user_data['name'], user_data['email']))
+        cursor.execute("SELECT * FROM events")
+        events = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return events
+    
+    def add_participant(self, participant_data):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("INSERT INTO participants (name, surname, date_of_birth, email, phone_number) VALUES (%s, %s, %s, %s, %s)", (participant_data['name'], participant_data['surname'], participant_data['date_of_birth'], participant_data['email'], participant_data['phone_number']))
         conn.commit()
         cursor.close()
         conn.close()
         return { "status":"ok","added_id": cursor.lastrowid } 
+    
     def add_event(self, event_data):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("INSERT INTO")
+        cursor.execute("INSERT INTO events (name,date, price, id_admin, id_adress) VALUES (%s, %s,%s,%s,%s)", (event_data['name'],event_data['date'], event_data['price'], event_data['id_admin'], event_data['id_adress']))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok","added_id": cursor.lastrowid}
+    
+    def update_event(self, event_data):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("UPDATE events SET name = %s, date = %s, price = %s, id_admin = %s, id_adress = %s WHERE id = %s",(event_data['name'], event_data['date'], event_data['price'], event_data['id_admin'], event_data['id_adress'], event_data['id']))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok","updated_id": cursor.lastrowid}
+    
+    def delete_event(self,id, event_data):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("UPDATE events SET deleted = 1 WHERE id = %s", [id])
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok"}

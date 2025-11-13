@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: User API
+  title: Events API
   version: 1.0.0
 servers:
   - url: http://localhost:9000
 paths:
-  /get-users:
+  /participants:
     get:
-      summary: Pobiera listę użytkowników
+      summary: Get participants
       responses:
         '200':
           description: Lista użytkowników w formacie json
@@ -18,18 +18,29 @@ paths:
                 items:
                   type: object
                   properties:
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    date_of_birth:
+                      type: string
+                      format: date
                     email:
                       type: string
                       format: email
-                    name:
-                      type: string
+                    phone_number:
+                      type: integer
                   required:
-                    - email
                     - name
-  /add-user:
+                    - surname
+                    - date_of_birth
+                    - email
+                    - phone_number
+
+  /participant:
     post:
       summary: Add a new user
-      description: Inserts a new user into the database.
+      description: Inserts a new participant into the database.
       requestBody:
         required: true
         content:
@@ -39,14 +50,28 @@ paths:
               properties:
                 name:
                   type: string
-                  example: "Jan Kowalski"
+                  example: "Jan"
+                surname:
+                  type: string
+                  example: "Kowalski"
+                date_of_birth:
+                  type: string
+                  format: date
+                  example: "2020-01-01"
                 email:
                   type: string
                   format: email
                   example: "jan@example.com"
+                phone_number:
+                  type: integer
+                  example: 123456789
               required:
                 - name
+                - surname
+                - date_of_birth
                 - email
+                - phone_number
+
       responses:
         "200":
           description: Użytkownik został pomyślnie dodany
@@ -66,3 +91,59 @@ paths:
           description: Invalid input
         "500":
           description: Internal server error                    
+  /event:
+    post:
+      summary: Add a new event
+      description: Inserts a new event into the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Koncert"
+                date:
+                  type: string
+                  format: date
+                  example: "2020-01-01"
+                price:
+                  type: number
+                  format: float
+                  example: 30.8
+                id_admin:
+                  type: integer
+                  example: 12
+                id_adress:
+                  type: integer
+                  example: 13
+              required:
+                - name
+                - date
+                - price
+                - id_admin
+                - id_adress
+      responses:
+        "200":
+          description: Event został pomyślnie dodany
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+                  added_id:
+                    description: Id dodanego eventu
+                    type: integer
+                    example: 13
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+
+
+

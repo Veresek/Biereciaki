@@ -4,15 +4,40 @@ from db import db
 
 app = FastAPI(debug=True)
 
-@app.get("/get-users")
-def get_users():
+@app.get("/participants")
+def get_participants():
     my_db = db()
-    return my_db.get_users()
+    return my_db.get_participants()
 
-@app.post("/save-user")
-async def save_user(request: Request):
-    user_data = await request.json()
-    #sample payload: {"name":"Test","email":"moj@email"}
+@app.get('/events')
+def get_events():
     my_db = db()
-    result = my_db.save_user(user_data)
+    return my_db.get_events()
+
+@app.post("/participant")
+async def add_participant(request: Request):
+    participant_data = await request.json()
+    my_db = db()
+    result = my_db.add_participant(participant_data)
     return JSONResponse(status_code=201, content=result)
+
+@app.post('/event')
+async def add_event(request: Request):
+    event_data = await request.json()
+    my_db = db()
+    result = my_db.add_event(event_data)
+    return JSONResponse(status_code=201, content=result)
+
+@app.put('/event')
+async def update_event(request: Request):
+    event_data = await request.json()
+    my_db = db()
+    result = my_db.update_event(event_data)
+    return JSONResponse(content=result)
+
+@app.delete('/event/{id}')
+async def delete_event(id,request: Request):
+    event_data = await request.json()
+    my_db = db()
+    result = my_db.delete_event(id,event_data)
+    return JSONResponse(content=result)
