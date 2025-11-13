@@ -16,4 +16,3 @@ async def save_user(request: Request):
     my_db = db()
     result = my_db.save_user(user_data)
     return JSONResponse(status_code=201, content=result)
-
