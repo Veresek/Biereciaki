@@ -9,7 +9,7 @@ paths:
     get:
       summary: Get all participants
       responses:
-        '200':
+        "200":
           description: List of participants in json format
           content:
             application/json:
@@ -90,7 +90,7 @@ paths:
         "400":
           description: Invalid input
         "500":
-          description: Internal server error                    
+          description: Internal server error
   /event:
     post:
       summary: Add a new event
@@ -144,33 +144,72 @@ paths:
           description: Invalid input
         "500":
           description: Internal server error
+    
+  /event/{id}:
+    delete:
+      summary: Delete event
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric id of the event to delete
+      responses:
+        "200":
+          description: Event succesfully deleted
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+    get:
+      summary: Get specific event
+      description: Get an event with given id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric id of the event to get
+      responses:
+        "200":
+          description: Selected event in json format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    date:
+                      type: string
+                      format: date
+                    price:
+                      type: number
+                      format: float
+                    id_admin:
+                      type: integer
+                    id_adress:
+                      type: integer
+                  required:
+                    - name
+                    - date
+                    - price
+                    - id_admin
+                    - id_adress
     put:
       summary: Update event
       description: Updates an event
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Koncert
-                date:
-                  type: string
-                  format: date
-                  example: 2020-02-01
-                price:
-                  type: number
-                  format: float
-                  example: 34.4
-                id_admin:
-                  type: integer
-                  example: 12
-                id_adress:
-                  type: integer
-                  example: 15
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric id of the event to get
       responses:
         "200":
           description: Event succesfully updated
@@ -183,32 +222,15 @@ paths:
                     type: string
                     example: "OK"
         "400":
-            description: Invalid input
+          description: Invalid input
         "500":
           description: Internal server error
-  /event/{id}:
-    put:
-      summary: Delete event
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-        description: Numeric id of the event to Delete
-      responses:
-        "200":
-          description: Event succesfully deleted
-        "400":
-          description: Invalid input
-        "500":  
-          description: Internal server error
-          
+
   /events:
     get:
       summary: Get all events
       responses:
-        '200':
+        "200":
           description: List of events in json format
           content:
             application/json:
@@ -235,9 +257,3 @@ paths:
                     - price
                     - id_admin
                     - id_adress
-  
-     
-
-
-
-
