@@ -21,6 +21,15 @@ class db:
         conn.close()
         return events
     
+    def get_event(self, id):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM events WHERE id = %s", [id])
+        event = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return event
+
     def add_participant(self, participant_data):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -39,16 +48,16 @@ class db:
         conn.close()
         return {"status":"ok","added_id": cursor.lastrowid}
     
-    def update_event(self, event_data):
+    def update_event(self,id, event_data):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("UPDATE events SET name = %s, date = %s, price = %s, id_admin = %s, id_adress = %s WHERE id = %s",(event_data['name'], event_data['date'], event_data['price'], event_data['id_admin'], event_data['id_adress'], event_data['id']))
+        cursor.execute("UPDATE events SET name = %s, date = %s, price = %s, id_admin = %s, id_adress = %s WHERE id = %s",(event_data['name'], event_data['date'], event_data['price'], event_data['id_admin'], event_data['id_adress'], id))
         conn.commit()
         cursor.close()
         conn.close()
         return {"status":"ok","updated_id": cursor.lastrowid}
     
-    def delete_event(self,id, event_data):
+    def delete_event(self,id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("UPDATE events SET deleted = 1 WHERE id = %s", [id])
