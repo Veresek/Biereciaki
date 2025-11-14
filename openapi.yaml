@@ -7,10 +7,10 @@ servers:
 paths:
   /participants:
     get:
-      summary: Get participants
+      summary: Get all participants
       responses:
         '200':
-          description: Lista użytkowników w formacie json
+          description: List of participants in json format
           content:
             application/json:
               schema:
@@ -39,7 +39,7 @@ paths:
 
   /participant:
     post:
-      summary: Add a new user
+      summary: Add a new participant
       description: Inserts a new participant into the database.
       requestBody:
         required: true
@@ -74,7 +74,7 @@ paths:
 
       responses:
         "200":
-          description: Użytkownik został pomyślnie dodany
+          description: Participant added succesfully
           content:
             application/json:
               schema:
@@ -84,7 +84,7 @@ paths:
                     type: string
                     example: "OK"
                   added_id:
-                    description: Id dodanego użytkownika
+                    description: Added participant's id
                     type: integer
                     example: 12
         "400":
@@ -127,7 +127,7 @@ paths:
                 - id_adress
       responses:
         "200":
-          description: Event został pomyślnie dodany
+          description: Event added succesfully
           content:
             application/json:
               schema:
@@ -137,13 +137,109 @@ paths:
                     type: string
                     example: "OK"
                   added_id:
-                    description: Id dodanego eventu
+                    description: Added event's id
                     type: integer
                     example: 13
         "400":
           description: Invalid input
         "500":
           description: Internal server error
+    put:
+      summary: Update event
+      description: Updates an event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Koncert
+                date:
+                  type: string
+                  format: date
+                  example: 2020-02-01
+                price:
+                  type: number
+                  format: float
+                  example: 34.4
+                id_admin:
+                  type: integer
+                  example: 12
+                id_adress:
+                  type: integer
+                  example: 15
+      responses:
+        "200":
+          description: Event succesfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "OK"
+        "400":
+            description: Invalid input
+        "500":
+          description: Internal server error
+  /event/{id}:
+    put:
+      summary: Delete event
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Numeric id of the event to Delete
+      responses:
+        "200":
+          description: Event succesfully deleted
+        "400":
+          description: Invalid input
+        "500":  
+          description: Internal server error
+          
+        
+
+  /events:
+    get:
+      summary: Get all events
+      responses:
+        '200':
+          description: List of events in json format
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    date:
+                      type: string
+                      format: date
+                    price:
+                      type: number
+                      format: float
+                    id_admin:
+                      type: integer
+                    id_adress:
+                      type: integer
+                  required:
+                    - name
+                    - date
+                    - price
+                    - id_admin
+                    - id_adress
+  
+     
+
 
 
 
