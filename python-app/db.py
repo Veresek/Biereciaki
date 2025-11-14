@@ -48,6 +48,15 @@ class db:
         conn.close()
         return {"status":"ok","added_id": cursor.lastrowid}
     
+    def add_address(self, address_data):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("INSERT INTO addresses (x,y) VALUES (%s,%s)", (address_data['x'], address_data['y']))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok","added_id": cursor.lastrowid}
+    
     def update_event(self,id, event_data):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -55,12 +64,30 @@ class db:
         conn.commit()
         cursor.close()
         conn.close()
-        return {"status":"ok","updated_id": cursor.lastrowid}
+        return {"status":"ok"}
+    
+    def update_address(self, id, address_data):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("UPDATE addresses SET x = %s, y = %s WHERE id = %s", (address_data['x'], address_data['y'], id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok"}
     
     def delete_event(self,id):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("UPDATE events SET deleted = 1 WHERE id = %s", [id])
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status":"ok"}
+    
+    def delete_address(self,id):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("UPDATE addresses SET deleted = 1 WHERE id = %s", [id])
         conn.commit()
         cursor.close()
         conn.close()

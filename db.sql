@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Lis 13, 2025 at 10:12 AM
+-- Generation Time: Lis 14, 2025 at 09:14 AM
 -- Wersja serwera: 9.5.0
 -- Wersja PHP: 8.3.26
 
@@ -24,6 +24,26 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `id` int NOT NULL,
+  `x` int NOT NULL,
+  `y` int NOT NULL,
+  `deleted` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Zrzut danych tabeli `addresses`
+--
+
+INSERT INTO `addresses` (`id`, `x`, `y`, `deleted`) VALUES
+(1, 123, 123, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `admins`
 --
 
@@ -36,17 +56,12 @@ CREATE TABLE `admins` (
   `phone_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
 --
--- Struktura tabeli dla tabeli `adress`
+-- Zrzut danych tabeli `admins`
 --
 
-CREATE TABLE `adress` (
-  `id` int NOT NULL,
-  `x` int NOT NULL,
-  `y` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `admins` (`id`, `name`, `surname`, `date_of_birth`, `email`, `phone_number`) VALUES
+(1, 'fsdfsdfs', 'sdfsd', '2020-01-01', 'fsdfsdfsd', 123123);
 
 -- --------------------------------------------------------
 
@@ -60,8 +75,18 @@ CREATE TABLE `events` (
   `date` date NOT NULL,
   `price` float NOT NULL,
   `id_admin` int NOT NULL,
-  `id_adress` int NOT NULL
+  `id_adress` int NOT NULL,
+  `deleted` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Zrzut danych tabeli `events`
+--
+
+INSERT INTO `events` (`id`, `name`, `date`, `price`, `id_admin`, `id_adress`, `deleted`) VALUES
+(2, 'nowyevent', '2020-01-01', 4534, 1, 1, 1),
+(3, 'cos', '2020-01-01', 120, 1, 1, 0),
+(4, 'spotkanie2', '2025-11-30', 44, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -90,19 +115,27 @@ CREATE TABLE `participants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
+-- Zrzut danych tabeli `participants`
+--
+
+INSERT INTO `participants` (`id`, `name`, `surname`, `date_of_birth`, `email`, `phone_number`) VALUES
+(1, 'imie', 'naziwsko', '2020-01-01', 'cos@example.com', 123456789),
+(2, 'Anna', 'Baran', '1990-01-01', 'example@exaplme.com', 987654321);
+
+--
 -- Indeksy dla zrzutów tabel
 --
+
+--
+-- Indeksy dla tabeli `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeksy dla tabeli `admins`
 --
 ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indeksy dla tabeli `adress`
---
-ALTER TABLE `adress`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -131,28 +164,28 @@ ALTER TABLE `participants`
 --
 
 --
+-- AUTO_INCREMENT dla tabeli `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT dla tabeli `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT dla tabeli `adress`
---
-ALTER TABLE `adress`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT dla tabeli `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT dla tabeli `participants`
 --
 ALTER TABLE `participants`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ograniczenia dla zrzutów tabel
@@ -163,7 +196,7 @@ ALTER TABLE `participants`
 --
 ALTER TABLE `events`
   ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`id_admin`) REFERENCES `admins` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `events_ibfk_2` FOREIGN KEY (`id_adress`) REFERENCES `adress` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `events_ibfk_2` FOREIGN KEY (`id_adress`) REFERENCES `addresses` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ograniczenia dla tabeli `part/event`

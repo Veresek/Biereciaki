@@ -33,6 +33,13 @@ async def add_event(request: Request):
     result = my_db.add_event(event_data)
     return JSONResponse(status_code=201, content=result)
 
+@app.post('/address')
+async def add_adress(request: Request):
+    address_data = await request.json()
+    my_db = db()
+    result = my_db.add_address(address_data)
+    return JSONResponse(status_code=201, content=result)
+
 @app.put('/event/{id}')
 async def update_event(id,request: Request):
     event_data = await request.json()
@@ -40,8 +47,21 @@ async def update_event(id,request: Request):
     result = my_db.update_event(id, event_data)
     return JSONResponse(content=result)
 
+@app.put('/address/{id}')
+async def update_event(id, request: Request):
+    address_data = await request.json()
+    my_db = db()
+    result = my_db.update_address(id, address_data)
+    return JSONResponse(content=result)
+
 @app.delete('/event/{id}')
 async def delete_event(id):
     my_db = db()
     result = my_db.delete_event(id)
+    return JSONResponse(content=result)
+
+@app.delete('/address/{id}')
+async def delete_address(id):
+    my_db = db()
+    result = my_db.delete_address(id)
     return JSONResponse(content=result)
